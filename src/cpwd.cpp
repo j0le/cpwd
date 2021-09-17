@@ -1,18 +1,17 @@
-// cpwd.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// cpwd.cpp
 
-//#include <iostream>
 #include <nowide/iostream.hpp>
 #include <nowide/args.hpp>
 #include <filesystem>
 #include <Windows.h>
 #include <type_traits>
 
-int main(int argc, char** argv)
+int main(/*int argc, char** argv*/)
 {
-	nowide::args a(argc, argv);
+	//nowide::args a(argc, argv);
 
 	std::error_code ec;
+	static_assert(std::is_same_v<std::filesystem::path::string_type, std::wstring>);
 	auto cwd = std::filesystem::current_path(ec);
 	const std::wstring cwd_wstr = cwd.native();
 	if (ec) {
@@ -38,8 +37,6 @@ int main(int argc, char** argv)
 		nowide::cerr << "Clipboard could not be emptied.\n";
 		return 1;
 	}
-
-	//CF_UNICODETEXT
 
 	static_assert(std::is_same_v<SIZE_T, std::size_t>);
 	static_assert(std::is_same_v<decltype(cwd_wstr.size()), std::size_t>);
@@ -85,18 +82,8 @@ int main(int argc, char** argv)
 	}
 
 
-	nowide::cerr << u8"The current path is:\n" << std::flush;
+	nowide::cerr << u8"The path to the current working directory/folder was successfully copyied to the system clipboard.\n"
+		"The path to current working directory/folder is:\n" << std::flush;
 	nowide::cout << cwd.u8string() << u8"\n" << std::flush;
 	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
