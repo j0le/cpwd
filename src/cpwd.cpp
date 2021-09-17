@@ -10,8 +10,16 @@ int main(int argc, char** argv)
 {
 	nowide::args a(argc, argv);
 	//https://en.cppreference.com/w/cpp/filesystem/current_path
+	std::error_code ec;
+	auto cwd = std::filesystem::current_path(ec);
+	std::wstring cwd_wstr = cwd.native();
+	if (ec) {
+		nowide::cerr << "error!\n";
+		return 1;
+	}
 
-	nowide::cout << "Hello World!\n";
+	nowide::cerr << u8"The current path is:\n" << std::flush;
+	nowide::cout << cwd.u8string() << u8"\n" << std::flush;
 	return 0;
 }
 
